@@ -14,40 +14,7 @@ O objetivo principal é estabelecer uma pipeline de dados utilizando a **Arquite
 ---
 
 ## Diagrama de Arquitetura
-
-```mermaid
-flowchart TD
-    %% Ingestão e Orquestração
-    subgraph Orquestração ["Orquestração & Ingestão"]
-        API["🌐 NASA EONET API\n(Dados Climáticos em JSON)"]
-        AIRFLOW["⚙️ Apache Airflow\n(DAGs de Backfill 10 anos + Ingestão Diária)"]
-        PYTHON["🐍 Scripts Python\n(Extração e Carga)"]
-        
-        AIRFLOW --> PYTHON
-        PYTHON -->|Requisições HTTP| API
-    end
-
-    %% Camada Bronze (Implementada)
-    subgraph Bronze ["Camada Bronze (Bruta) - Implementada"]
-        MINIO[("🪣 MinIO Data Lake\n(Arquivos JSON Brutos)")]
-        PYTHON -->|Upload de JSONs| MINIO
-    end
-
-    %% Camadas Futuras
-    subgraph SilverGold ["Camadas Silver & Gold - Em Planejamento"]
-        DUCKDB["🦆 DuckDB\n(Tratamento & Limpeza)"]
-        PARQUET[("📦 Arquivos Parquet\n(Camada Silver/Gold)")]
-        OUTPUTS["📊 Dashboards & Modelos ML\n(Análise Sazonal e Preditiva)"]
-
-        MINIO -.->|Leitura futura| DUCKDB
-        DUCKDB -.->|Geração de Parquet| PARQUET
-        PARQUET -.->|Consumo analítico| OUTPUTS
-    end
-
-    %% Estilização visual dos blocos
-    style Bronze fill:#8B4513,stroke:#333,stroke-width:1px,color:#fff
-    style SilverGold fill:#2B3A42,stroke:#333,stroke-width:1px,color:#fff,stroke-dasharray: 5 5
-```
+![Diagrama de Arquitetura](./assets/images/fluxo-pipeline.png)
 ---
 
 ## Status do Projeto
